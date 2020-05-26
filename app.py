@@ -137,10 +137,73 @@ def create_app(test_config=None):
       'added_movie': movie.format()
     })
 
-# PATCH actors/id
+# PATCH artists/id
+  @app.route('/artists/<int:artist_id>', methods=['PATCH'])
+  def update_artist(artist_id):
+    artist = Artists.query.get(artist_id)
+    if artist is None:
+      abort(404)
+    else:
+      try:
+        body = request.get_json()
+
+        name = body.get('name')
+        age = body.get('age')
+        gender = body.get('gender')
+
+        artist.name = name
+        artist.age = age
+        artist.gender = gender
+
+        artist.update()
+      except:
+        abort(422)
+      return jsonify({
+        'success': True,
+        'updated_artist': artist.format()
+      })
+
 # PATCH movies/id
+  @app.route('/movies/<int:movie_id>', methods=['PATCH'])
+  def update_movie(movie_id):
+    movie = Movies.query.get(movie_id)
+    if movie is None:
+      abort(404)
+    else:
+      try:
+        body = request.get_json()
+
+        title = body.get('title')
+        release_date = body.get('release_date')
+
+        movie.title = title
+        movie.release_date = release_date
+
+        movie.update()
+      except:
+        abort(422)
+      return jsonify({
+        'success': True,
+        'updated_movie': movie.format()
+      })
+
 # 404 error
+  @app.errorhandler(404)
+  def not_found(error):
+    return jsonify({
+      'success': False,
+      'error': 404,
+      'message': 'resource not found'
+    }), 404
+
 # 422 error
+  @app.errorhandler(422)
+  def unprocessable_request(error):
+    return jsonify({
+      'success': False,
+      'error': 422,
+      'message': 'unprocessable'
+    }), 422
 
   return app
 
