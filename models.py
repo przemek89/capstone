@@ -22,6 +22,7 @@ class Movies(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
     release_date = db.Column(db.Integer)
+    performances = db.relationship('Performances', backref='Movies', lazy=True)
 
     def insert(self):
         db.session.add(self)
@@ -48,6 +49,7 @@ class Artists(db.Model):
     name = db.Column(db.String(80))
     age = db.Column(db.Integer)
     gender = db.Column(db.String(80))
+    performances = db.relationship('Performances', backref='Artists', lazy=True)
 
     def insert(self):
         db.session.add(self)
@@ -67,3 +69,10 @@ class Artists(db.Model):
             'age': self.age,
             'gender': self.gender
         }
+
+class Performances(db.Model):
+    __tablename__ = "Performances"
+
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('Artists.id'))
+    movie_id = db.Column(db.Integer, db.ForeignKey('Movies.id'))
