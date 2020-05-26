@@ -2,11 +2,57 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from models import setup_database, Artists, Movies
 
 def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
+  setup_database(app)
   CORS(app)
+
+  @app.after_request
+  def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+    return response
+
+# GET /artists'
+  @app.route('/artists', methods=['GET'])
+  def get_all_actors():
+    artists_query = Artists.query.all()
+    artists = [artist.format() for artist in artists_query]
+
+    if artists_query is None:
+      abort(404)
+    else:
+      return jsonify({
+        'success': True,
+        'artists': artists
+      })
+
+# GET /artists/<int:artist_id>
+  @app.route('/artists/<int:artist_id>', methods=['GET'])
+  def get_actor():
+    artist = Artists.query.get(artist_id)
+    if artist is None:
+      abort(404)
+    else:
+      artist = artist.format()
+      return jsonify({
+        'success': True,
+        'artist': artist
+      })
+
+# GET movies
+# GET movies/id
+# DELETE actors/id
+# DELETE movies/id
+# POST actors
+# POST movies
+# PATCH actors/id
+# PATCH movies/id
+# 404 error
+# 422 error
 
   return app
 
