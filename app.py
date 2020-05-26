@@ -104,8 +104,39 @@ def create_app(test_config=None):
       'deleted_artist_id': deleted_movie_id
     })
 
-# POST actors
+# POST artists
+  @app.route('/artists', methods=['POST'])
+  def add_new_artist():
+    try:
+      body = request.get_json()
+      name = body.get('name')
+      age = body.get('age')
+      gender = body.get('gender')
+      artist = Artists(name=name, age=age, gender=gender)
+      artist.insert()
+    except:
+      abort(422)
+    return jsonify({
+      'success': True,
+      'added_artist': artist.format()
+    })
+
 # POST movies
+  @app.route('/movies', methods=['POST'])
+  def add_new_movie():
+    try:
+      body = request.get_json()
+      title = body.get('title')
+      release_date = body.get('release_date')
+      movie = Movies(title=title, release_date=release_date)
+      movie.insert()
+    except:
+      abort(422)
+    return jsonify({
+      'success': True,
+      'added_movie': movie.format()
+    })
+
 # PATCH actors/id
 # PATCH movies/id
 # 404 error
