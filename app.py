@@ -32,7 +32,7 @@ def create_app(test_config=None):
 
 # GET /artists/<int:artist_id>
   @app.route('/artists/<int:artist_id>', methods=['GET'])
-  def get_actor():
+  def get_actor(artist_id):
     artist = Artists.query.get(artist_id)
     if artist is None:
       abort(404)
@@ -44,7 +44,32 @@ def create_app(test_config=None):
       })
 
 # GET movies
+  @app.route('/movies', methods=['GET'])
+  def get_all_movies():
+    movies_query = Movies.query.all()
+    movies = [movie.format() for movie in movies_query]
+
+    if movies_query is None:
+      abort(404)
+    else:
+      return jsonify({
+        'success': True,
+        'movies': movies
+      })
+
 # GET movies/id
+  @app.route('/movies/<int:movie_id>', methods=['GET'])
+  def get_movie(movie_id):
+    movie = Movies.query.get(movie_id)
+    if movie is None:
+      abort(404)
+    else:
+      movie = movie.format()
+      return jsonify({
+        'success': True,
+        'movie': movie
+      })
+
 # DELETE actors/id
 # DELETE movies/id
 # POST actors
