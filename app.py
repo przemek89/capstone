@@ -70,8 +70,40 @@ def create_app(test_config=None):
         'movie': movie
       })
 
-# DELETE actors/id
+# DELETE artist/id
+  @app.route('/artists/<int:artist_id>', methods=['DELETE'])
+  def delete_artist(artist_id):
+    try:
+      artist_to_be_deleted = Artists.query.filter_by(id=artist_id).one_or_none()
+      if artist_to_be_deleted is None:
+        abort(404)
+      else:
+        deleted_artist_id = artist_to_be_deleted.id
+        artist_to_be_deleted.delete()
+    except:
+      abort(422)
+    return jsonify({
+      'success': True,
+      'deleted_artist_id': deleted_artist_id
+    })
+
 # DELETE movies/id
+  @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+  def delete_movie(movie_id):
+    try:
+      movie_to_be_deleted = Movies.query.filter_by(id=movie_id).one_or_none()
+      if movie_to_be_deleted is None:
+        abort(404)
+      else:
+        deleted_movie_id = movie_to_be_deleted.id
+        movie_to_be_deleted.delete()
+    except:
+      abort(422)
+    return jsonify({
+      'success': True,
+      'deleted_artist_id': deleted_movie_id
+    })
+
 # POST actors
 # POST movies
 # PATCH actors/id
