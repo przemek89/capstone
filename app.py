@@ -3,6 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_database, Artists, Movies
+from auth import AuthError, requires_auth
 
 def create_app(test_config=None):
   # create and configure the app
@@ -18,6 +19,7 @@ def create_app(test_config=None):
 
 # GET /artists'
   @app.route('/artists', methods=['GET'])
+  @requires_auth('get:artists')
   def get_all_actors():
     artists_query = Artists.query.all()
     artists = [artist.format() for artist in artists_query]
@@ -32,6 +34,7 @@ def create_app(test_config=None):
 
 # GET /artists/<int:artist_id>
   @app.route('/artists/<int:artist_id>', methods=['GET'])
+  @requires_auth('get:artist')
   def get_actor(artist_id):
     artist = Artists.query.get(artist_id)
     if artist is None:
@@ -45,6 +48,7 @@ def create_app(test_config=None):
 
 # GET movies
   @app.route('/movies', methods=['GET'])
+  @requires_auth('get:movies')
   def get_all_movies():
     movies_query = Movies.query.all()
     movies = [movie.format() for movie in movies_query]
@@ -59,6 +63,7 @@ def create_app(test_config=None):
 
 # GET movies/id
   @app.route('/movies/<int:movie_id>', methods=['GET'])
+  @requires_auth('get:movie')
   def get_movie(movie_id):
     movie = Movies.query.get(movie_id)
     if movie is None:
@@ -72,6 +77,7 @@ def create_app(test_config=None):
 
 # DELETE artist/id
   @app.route('/artists/<int:artist_id>', methods=['DELETE'])
+  @requires_auth('delete:artist')
   def delete_artist(artist_id):
     try:
       artist_to_be_deleted = Artists.query.filter_by(id=artist_id).one_or_none()
@@ -89,6 +95,7 @@ def create_app(test_config=None):
 
 # DELETE movies/id
   @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+  @requires_auth('delete:movie')
   def delete_movie(movie_id):
     try:
       movie_to_be_deleted = Movies.query.filter_by(id=movie_id).one_or_none()
@@ -106,6 +113,7 @@ def create_app(test_config=None):
 
 # POST artists
   @app.route('/artists', methods=['POST'])
+  @requires_auth('post:artist')
   def add_new_artist():
     try:
       body = request.get_json()
@@ -123,6 +131,7 @@ def create_app(test_config=None):
 
 # POST movies
   @app.route('/movies', methods=['POST'])
+  @requires_auth('post:movie')
   def add_new_movie():
     try:
       body = request.get_json()
@@ -139,6 +148,7 @@ def create_app(test_config=None):
 
 # PATCH artists/id
   @app.route('/artists/<int:artist_id>', methods=['PATCH'])
+  @requires_auth('patch:artist')
   def update_artist(artist_id):
     artist = Artists.query.get(artist_id)
     if artist is None:
@@ -165,6 +175,7 @@ def create_app(test_config=None):
 
 # PATCH movies/id
   @app.route('/movies/<int:movie_id>', methods=['PATCH'])
+  @requires_auth('patch:movie')
   def update_movie(movie_id):
     movie = Movies.query.get(movie_id)
     if movie is None:
@@ -204,6 +215,15 @@ def create_app(test_config=None):
       'error': 422,
       'message': 'unprocessable'
     }), 422
+
+# Authentication Error
+  @app.errorhandler(AuthError)
+  def unauthorized(ex):
+    return jsonify({
+        "success": False,
+        "error": ex.status_code,
+        "message": ex.error
+        }), 401
 
   return app
 
