@@ -71,7 +71,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
-        self.assertEqual(data['actor'], {'id': 1, 'name': 'Tom Cruise', 'age': 50, 'gender': 'male'})
+        self.assertEqual(body['actor'], {'id': 1, 'name': 'Tom Cruise', 'age': 50, 'gender': 'male'})
 
     #GET actor failure casting director
     def test_get_actor_failure(self):
@@ -92,21 +92,51 @@ class CastingAgencyTestCase(unittest.TestCase):
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
-        self.assertEqual(data['actor'], {'id': 1, 'title': 'Top Gun', 'release_date': 1986})
+        self.assertEqual(body['actor'], {'id': 1, 'title': 'Top Gun', 'release_date': 1986})
 
     #GET movie failure casting director
     def test_get_movie_failure(self):
-        res = self.client().get('/Movies/123456789', headers={
-            "Authorization": 'bearer ' + self.token_director})
+        res = self.client().get('/Movies/123456789', headers={"Authorization": 'bearer ' + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(body['success'], False)
         self.assertEqual(body['message'], 'resource not found')
 
     #DELETE actor success casting director
+    def test_delete_actor_casting_director(self):
+        #post actor
+        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
+        #delete actor
+        res = self.client().delete('/Artists/1', headers={"Authorization": 'bearer ' + self.token_director})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
     #DELETE actor failure casting asistant
+    def test_delete_actor_failure(self):
+        res = self.client().delete('/Artists/123456789', headers={"Authorization": 'bearer ' + self.token_director})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(body['success'], False)
+
+
     #DELETE movie success producer
-    #DELETE movie failure casting asistant
+    def test_delete_movie_casting_director(self):
+        #post movie
+        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
+        #delete movie
+        res = self.client().delete('/Movies/1', headers={"Authorization": 'bearer ' + self.token_director})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
+    #DELETE movie failure casting director
+    def test_delete_movie_failure(self):
+        res = self.client().delete('/Movies/123456789', headers={"Authorization": 'bearer ' + self.token_director})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(body['success'], False)
+
     #POST actors success producer
     #POST actors failure casting asistant
     #POST movies success producer
