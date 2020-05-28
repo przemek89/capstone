@@ -3,7 +3,7 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 
-from app import create_app
+from api import create_app
 from models import setup_database, Artists, Movies
 
 
@@ -132,7 +132,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     #DELETE movie failure casting director
     def test_delete_movie_failure(self):
-        res = self.client().delete('/Movies/123456789', headers={"Authorization": 'bearer ' + self.token_director})
+        res = self.client().delete('/Movies/123456789', headers={"Authorization": 'bearer ' + self.token_producer})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(body['success'], False)
@@ -168,9 +168,9 @@ class CastingAgencyTestCase(unittest.TestCase):
     #PATCH actor success producer
     def test_patch_artist_casting_director(self):
         #post artist
-        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
+        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_producer}, json=self.actor)
         #patch artist
-        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_director}, json={'Age': 55})
+        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_producer}, json={'Age': 55})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
@@ -185,9 +185,9 @@ class CastingAgencyTestCase(unittest.TestCase):
     #PATCH movie success producer
     def test_patch_movie_casting_director(self):
         #post movie
-        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
+        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_producer}, json=self.movie)
         #patch movie
-        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_director}, json={'release_date': 1987})
+        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_producer}, json={'release_date': 1987})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
