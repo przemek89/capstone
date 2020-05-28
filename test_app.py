@@ -138,13 +138,66 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(body['success'], False)
 
     #POST actors success producer
+    def test_post_artist_casting_director(self):
+        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
     #POST actors failure casting asistant
+    def test_post_artist_casting_assistant_failure(self):
+        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_assistant}, json=self.actor)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['success'], False)
+
     #POST movies success producer
+    def test_post_movie_casting_director(self):
+        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
     #POST movies failure casting asistant
+    def test_post_movie_casting_assistant_failure(self):
+        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_assistant}, json=self.movie)
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['success'], False)
+
     #PATCH actor success producer
+    def test_patch_artist_casting_director(self):
+        #post artist
+        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
+        #patch artist
+        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_director}, json={'Age': 55})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
     #PATCH actor failure casting asistant
+    def test_patch_artist_casting_assistant_failure(self):
+        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_assistant}, json={'Age': 55})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['success'], False)
+
     #PATCH movie success producer
+    def test_patch_movie_casting_director(self):
+        #post movie
+        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
+        #patch movie
+        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_director}, json={'release_date': 1987})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(body['success'], True)
+
     #PATCH movie failure casting asistant
+    def test_patch_movie_casting_assistant_failure(self):
+        res = self.client().patch('Movies/1', headers={"Authorization": 'bearer ' + self.token_assistant}, json={'Age': 55})
+        body = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(body['success'], False)
 
 if __name__ == "__main__":
     unittest.main()
