@@ -87,29 +87,133 @@ Application is hosted on Heroku: https://casting-agency-fsnd-przemek89.herokuapp
 
 Below
 
-#### GET Artists
+#### GET '/Artists'
 
-GET '/Artists'
 - Request Arguments: None
 - Returns a list of Artists
 - Sample:
 ```python
-{'artists' : [
+{'success': True,
+'artists' : [
     {'name': 'Tom Cruise',
     'age': 50,
     'gender': 'male'}
     ]}
 ```
 
-#### GET Artist
-#### GET Movies
-#### GET Movie
-#### DELETE Artist
-#### DELETE Movie
-#### POST Artists
-#### POST Movies
-#### PATCH Artist
-#### PATCH Movie
+#### GET '/Artists/<int:artist_id>'
+
+- Request Arguments: id of an artist
+- Returns details of requested artist
+- Sample:
+```python
+{'success': True,
+'artist' : [
+    {'name': 'Tom Cruise',
+    'age': 50,
+    'gender': 'male'}
+    ]}
+```
+
+#### GET '/Movies'
+
+- Request Arguments: None
+- Returns a list of Movies
+- Sample:
+```python
+{'success': True,
+'movies' : [
+    {'name': 'Top Gun',
+    'release_date': 1986}
+    ]}
+```
+
+#### GET '/Movies/<int:movie_id>'
+
+- Request Arguments: id of a movie
+- Returns details of requested movie
+- Sample:
+```python
+{'success': True,
+'movies' : [
+    {'name': 'Top Gun',
+    'release_date': 1986}
+    ]}
+```
+
+#### DELETE '/Artists/<int:artist_id>'
+
+- Request Arguments: id of an artist
+- Returns JSON response containing request status and an id of deleted artist
+- Sample:
+```python
+{'success': True,
+'deleted_artist_id': 1}
+```
+
+#### DELETE '/Movies/<int:movie_id>'
+
+- Request Arguments: id of a movie
+- Returns JSON response containing request status and an id of deleted movie
+- Sample:
+```python
+{'success': True,
+'deleted_movie_id': 1}
+```
+
+#### POST '/Artists'
+
+- Request Arguments: none
+- Returns JSON response containing request status and details of added artist
+- Sample:
+```python
+{'success': True,
+'added_artist' : [
+    {'name': 'Tom Cruise',
+    'age': 50,
+    'gender': 'male'}
+    ]}
+```
+
+#### POST '/Movies'
+
+- Request Arguments: none
+- Returns JSON response containing request status and details of added movie
+- Sample:
+```python
+{'success': True,
+'added_movie' : [
+    {'name': 'Top Gun',
+    'release_date': 1986}
+    ]}
+```
+
+#### PATCH '/Artists/<int:artist_id>'
+
+- Request Arguments: none
+- Returns JSON response containing request status and details of updated artist
+- Sample:
+```python
+{'success': True,
+'updated_artist' : [
+    {'name': 'Tom Cruise',
+    'age': 50,
+    'gender': 'male'}
+    ]}
+```
+
+#### PATCH '/Movies/<int:movie_id>'
+
+- Request Arguments: none
+- Returns JSON response containing request status and details of updated movie
+- Sample:
+```python
+{'success': True,
+'updated_movie' : [
+    {'name': 'Top Gun',
+    'release_date': 1986}
+    ]}
+```
 
 ### Users
 

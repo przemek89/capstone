@@ -108,7 +108,7 @@ def create_app(test_config=None):
       abort(422)
     return jsonify({
       'success': True,
-      'deleted_artist_id': deleted_movie_id
+      'deleted_movie_id': deleted_movie_id
     })
 
 # POST artists
