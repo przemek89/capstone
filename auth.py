@@ -9,18 +9,20 @@ AUTH0_DOMAIN = 'coffe-shop-fsnd.eu.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'coffee_shop'
 
-## AuthError Exception
+# AuthError Exception
 '''
 AuthError Exception
 A standardized way to communicate auth failure modes
 '''
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-## Auth Header
+# Auth Header
 
 def get_token_auth_header():
     header = request.headers.get('Authorization', None)
@@ -57,14 +59,14 @@ def get_token_auth_header():
 def check_permissions(permission, payload):
     if 'permission' not in payload:
         raise AuthError({
-            'code':'invalid_claims',
-            'description':'Permission not found in JWT'
+            'code': 'invalid_claims',
+            'description': 'Permission not found in JWT'
         }, 400)
 
     if permission not in payload['permission']:
         raise AuthError({
-            'code':'unauthorized',
-            'description':'Permission not found'
+            'code': 'unauthorized',
+            'description': 'Permission not found'
         }, 403)
 
     return True
@@ -77,8 +79,8 @@ def verify_decode_jwt(token):
 
     if 'kid' not in header:
         raise AuthError({
-            'code':'invalid_header',
-            'description':'Authorization malformed.'
+            'code': 'invalid_header',
+            'description': 'Authorization malformed.'
         }, 401)
 
     key = {}
@@ -113,8 +115,9 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
-            }, 401)
+                'description': 'Incorrect claims. ' +
+                            'Please, check the audience and issuer.'
+                            }, 401)
 
         except Exception:
             raise AuthError({
@@ -135,7 +138,7 @@ def requires_auth(permission=''):
             token = get_token_auth_header()
             try:
                 payload = verify_decode_jwt(token)
-            except:
+            except Exception:
                 raise AuthError({
                     'code': 'invalid_token',
                     'description': 'Access denied due to invalid token'

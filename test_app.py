@@ -31,7 +31,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         """Executed after each test"""
         pass
 
-    #GET actors success casting asistant
+    # GET actors success casting asistant
     def test_get_artists_casting_assistant(self):
         res = self.client().get('/Artists', headers={
             "Authorization": 'bearer ' + self.token_assistant})
@@ -39,14 +39,14 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #GET actors failure
+    # GET actors failure
     def test_get_artists_no_authorisation(self):
         res = self.client().get('/Artists')
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(body['success'], False)
 
-    #GET movies success casting asistant
+    # GET movies success casting asistant
     def test_get_movies_casting_assistant(self):
         res = self.client().get('/Movies', headers={
             "Authorization": 'bearer ' + self.token_assistant})
@@ -54,26 +54,32 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #GET movies failure casting asistant
+    # GET movies failure casting asistant
     def test_get_movies_no_authorisation(self):
         res = self.client().get('/Artists')
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(body['success'], False)
 
-    #GET actor success casting director
+    # GET actor success casting director
     def test_get_actor_casting_director(self):
-        #post actor
-        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
-        #get actor
+        # post actor
+        res = self.client().post('/Artists', headers={"Authorization": 'bearer'
+                                                      + ' '
+                                                      + self.token_director},
+                                 json=self.actor)
+        # get actor
         res = self.client().get('/Artists/1', headers={
             "Authorization": 'bearer ' + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
-        self.assertEqual(body['actor'], {'id': 1, 'name': 'Tom Cruise', 'age': 50, 'gender': 'male'})
+        self.assertEqual(body['actor'], {'id': 1,
+                                         'name': 'Tom Cruise',
+                                         'age': 50,
+                                         'gender': 'male'})
 
-    #GET actor failure casting director
+    # GET actor failure casting director
     def test_get_actor_failure(self):
         res = self.client().get('/Artists/123456789', headers={
             "Authorization": 'bearer ' + self.token_director})
@@ -82,122 +88,174 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(body['success'], False)
         self.assertEqual(body['message'], 'resource not found')
 
-    #GET movie success casting director
+    # GET movie success casting director
     def test_get_movie_casting_director(self):
-        #post movie
-        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
-        #get movie
+        # post movie
+        res = self.client().post('/Movies', headers={"Authorization": 'bearer'
+                                                     + ' '
+                                                     + self.token_director},
+                                 json=self.movie)
+        # get movie
         res = self.client().get('/Movies/1', headers={
             "Authorization": 'bearer ' + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
-        self.assertEqual(body['actor'], {'id': 1, 'title': 'Top Gun', 'release_date': 1986})
+        self.assertEqual(body['actor'], {'id': 1,
+                                         'title': 'Top Gun',
+                                         'release_date': 1986})
 
-    #GET movie failure casting director
+    # GET movie failure casting director
     def test_get_movie_failure(self):
-        res = self.client().get('/Movies/123456789', headers={"Authorization": 'bearer ' + self.token_director})
+        res = self.client().get('/Movies/123456789',
+                                headers={"Authorization": 'bearer'
+                                         + ' '
+                                         + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(body['success'], False)
         self.assertEqual(body['message'], 'resource not found')
 
-    #DELETE actor success casting director
+    # DELETE actor success casting director
     def test_delete_actor_casting_director(self):
-        #post actor
-        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
-        #delete actor
-        res = self.client().delete('/Artists/1', headers={"Authorization": 'bearer ' + self.token_director})
+        # post actor
+        res = self.client().post('/Artists',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_director},
+                                 json=self.actor)
+        # delete actor
+        res = self.client().delete('/Artists/1',
+                                   headers={"Authorization": 'bearer '
+                                            + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #DELETE actor failure casting asistant
+    # DELETE actor failure casting asistant
     def test_delete_actor_failure(self):
-        res = self.client().delete('/Artists/123456789', headers={"Authorization": 'bearer ' + self.token_director})
+        res = self.client().delete('/Artists/123456789',
+                                   headers={"Authorization": 'bearer '
+                                            + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(body['success'], False)
 
-
-    #DELETE movie success producer
+    # DELETE movie success producer
     def test_delete_movie_casting_director(self):
-        #post movie
-        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
-        #delete movie
-        res = self.client().delete('/Movies/1', headers={"Authorization": 'bearer ' + self.token_director})
+        # post movie
+        res = self.client().post('/Movies',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_director},
+                                 json=self.movie)
+        # delete movie
+        res = self.client().delete('/Movies/1',
+                                   headers={"Authorization": 'bearer '
+                                            + self.token_director})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #DELETE movie failure casting director
+    # DELETE movie failure casting director
     def test_delete_movie_failure(self):
-        res = self.client().delete('/Movies/123456789', headers={"Authorization": 'bearer ' + self.token_producer})
+        res = self.client().delete('/Movies/123456789',
+                                   headers={"Authorization": 'bearer '
+                                            + self.token_producer})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(body['success'], False)
 
-    #POST actors success producer
+    # POST actors success producer
     def test_post_artist_casting_director(self):
-        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_director}, json=self.actor)
+        res = self.client().post('/Artists',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_director},
+                                 json=self.actor)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #POST actors failure casting asistant
+    # POST actors failure casting asistant
     def test_post_artist_casting_assistant_failure(self):
-        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_assistant}, json=self.actor)
+        res = self.client().post('/Artists',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_assistant},
+                                 json=self.actor)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(body['success'], False)
 
-    #POST movies success producer
+    # POST movies success producer
     def test_post_movie_casting_director(self):
-        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_director}, json=self.movie)
+        res = self.client().post('/Movies',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_director},
+                                 json=self.movie)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #POST movies failure casting asistant
+    # POST movies failure casting asistant
     def test_post_movie_casting_assistant_failure(self):
-        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_assistant}, json=self.movie)
+        res = self.client().post('/Movies',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_assistant},
+                                 json=self.movie)
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(body['success'], False)
 
-    #PATCH actor success producer
+    # PATCH actor success producer
     def test_patch_artist_casting_director(self):
-        #post artist
-        res = self.client().post('/Artists', headers={"Authorization": 'bearer ' + self.token_producer}, json=self.actor)
-        #patch artist
-        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_producer}, json={'Age': 55})
+        # post artist
+        res = self.client().post('/Artists',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_producer},
+                                 json=self.actor)
+        # patch artist
+        res = self.client().patch('Artists/1',
+                                  headers={"Authorization": 'bearer '
+                                           + self.token_producer},
+                                  json={'Age': 55})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #PATCH actor failure casting asistant
+    # PATCH actor failure casting asistant
     def test_patch_artist_casting_assistant_failure(self):
-        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_assistant}, json={'Age': 55})
+        res = self.client().patch('Artists/1',
+                                  headers={"Authorization": 'bearer '
+                                           + self.token_assistant},
+                                  json={'Age': 55})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(body['success'], False)
 
-    #PATCH movie success producer
+    # PATCH movie success producer
     def test_patch_movie_casting_director(self):
-        #post movie
-        res = self.client().post('/Movies', headers={"Authorization": 'bearer ' + self.token_producer}, json=self.movie)
-        #patch movie
-        res = self.client().patch('Artists/1', headers={"Authorization": 'bearer ' + self.token_producer}, json={'release_date': 1987})
+        # post movie
+        res = self.client().post('/Movies',
+                                 headers={"Authorization": 'bearer '
+                                          + self.token_producer},
+                                 json=self.movie)
+        # patch movie
+        res = self.client().patch('Artists/1',
+                                  headers={"Authorization": 'bearer '
+                                           + self.token_producer},
+                                  json={'release_date': 1987})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(body['success'], True)
 
-    #PATCH movie failure casting asistant
+    # PATCH movie failure casting asistant
     def test_patch_movie_casting_assistant_failure(self):
-        res = self.client().patch('Movies/1', headers={"Authorization": 'bearer ' + self.token_assistant}, json={'Age': 55})
+        res = self.client().patch('Movies/1',
+                                  headers={"Authorization": 'bearer '
+                                           + self.token_assistant},
+                                  json={'Age': 55})
         body = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertEqual(body['success'], False)
+
 
 if __name__ == "__main__":
     unittest.main()

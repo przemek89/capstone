@@ -5,7 +5,8 @@ from flask_migrate import Migrate
 
 db_url = "postgres://postgres:postgres@localhost:5432/castingAgency"
 db = SQLAlchemy()
-#db.init_app(APP)
+# db.init_app(APP)
+
 
 def setup_database(app, database_path=db_url):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
@@ -14,6 +15,7 @@ def setup_database(app, database_path=db_url):
     db.init_app(app)
     # db.create_all()
     migrate = Migrate(app, db)
+
 
 class Movies(db.Model):
     __tablename__ = 'Movies'
@@ -41,6 +43,7 @@ class Movies(db.Model):
             'release_date': self.release_date
         }
 
+
 class Artists(db.Model):
     __tablename__ = 'Artists'
 
@@ -48,7 +51,9 @@ class Artists(db.Model):
     name = db.Column(db.String(80))
     age = db.Column(db.Integer)
     gender = db.Column(db.String(80))
-    performances = db.relationship('Performances', backref='Artists', lazy=True)
+    performances = db.relationship('Performances',
+                                   backref='Artists',
+                                   lazy=True)
 
     def insert(self):
         db.session.add(self)
@@ -68,6 +73,7 @@ class Artists(db.Model):
             'age': self.age,
             'gender': self.gender
         }
+
 
 class Performances(db.Model):
     __tablename__ = "Performances"
