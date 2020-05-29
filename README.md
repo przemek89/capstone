@@ -1,4 +1,6 @@
-# Casting
+# Casting Agency API
+
+The Casting Agency models a company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
 
 ## Getting Started
 
@@ -53,23 +55,79 @@ You can run this API locally at the default http://127.0.0.1:5000/
 
 ## Testing
 
+```bash
+dropdb castingAgency
+createdb castingAgency
+python test_app.py
+```
+
 ## Deployment
+
+Application is hosted on Heroku: https://casting-agency-fsnd-przemek89.herokuapp.com/
 
 ## API Reference
 
 ### Getting Started
 
+- Base URL: https://casting-agency-fsnd-przemek89.herokuapp.com/
+- Authentication: This app has got 3 users. Each has his own token which are provided in setup.sh file. Details about each user privilege are provided below.
+
 ### Endpoints
 
-## GET Artists
-## GET Artist
-## GET Movies
-## GET Movie
-## DELETE Artist
-## DELETE Movie
-## POST Artists
-## POST Movies
-## PATCH Artist
-## PATCH Movie
+- GET '/Artists'
+- GET '/Artists/<int:artist_id>'
+- GET '/Movies'
+- GET '/Movies/<int:movie_id>'
+- DELETE '/Artists/<int:artist_id>'
+- DELETE '/Movies/<int:movie_id>'
+- POST '/Artists'
+- POST '/Movies'
+- PATCH '/Artists/<int:artist_id>'
+- PATCH '/Movies/<int:movie_id>'
+
+Below
+
+#### GET Artists
+
+GET '/Artists'
+- Request Arguments: None
+- Returns a list of Artists
+- Sample:
+```python
+{'artists' : [
+    {'name': 'Tom Cruise',
+    'age': 50,
+    'gender': 'male'}
+    ]}
+```
+
+#### GET Artist
+#### GET Movies
+#### GET Movie
+#### DELETE Artist
+#### DELETE Movie
+#### POST Artists
+#### POST Movies
+#### PATCH Artist
+#### PATCH Movie
 
 ### Users
+
+This app has 3 users. each user has his own privileges.
+- Casting Assistant
+    - Can view actors and movies
+- Casting Director
+    - All permissions of a Casting Assistant and…
+    - Add or delete an actor from the database
+    - Modify actors or movies
+- Executive Producer
+    - All permissions of a Casting Director and…
+    - Add or delete a movie from the database
+
+### Environment Variables
+
+In the setup.sh file there are JWT tokens for each User Role
+
+- CASTING_ASSISTANT
+- CASTING_DIRECTOR
+- EXECUTIVE_PRODUCER
