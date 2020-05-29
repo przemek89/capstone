@@ -58,7 +58,7 @@ You can run this API locally at the default http://127.0.0.1:5000/
 ```bash
 dropdb castingAgency
 createdb castingAgency
-python test_app.py
+python3 test_app.py
 ```
 
 ## Deployment
